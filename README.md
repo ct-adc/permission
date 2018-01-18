@@ -225,7 +225,7 @@ undefined
 
 ### initRouterHook
 
-初始化路由配置
+初始化路由配置；该方法初始化路由钩子
 
 #### 参数列表
 
@@ -241,11 +241,9 @@ undefined
 
 ## 更新日志
 
-[更新日志]({CHANGELOG.md的线上地址})
+[更新日志](https://github.com/ct-adc/permission/blob/dev/CHANGELOG.md)
 
 ## 外部资源依赖列表
 
-- jdPicker.js V2.0.0+
-
-- webUploader V1.5.0+
+- jquery（只要支持ajax方法即可）
 

@@ -214,10 +214,10 @@ object
 
 返回值 | 说明 | 类型 | 描述 |
 --- | --- | --- | --- 
-object | 处理后的权限对象 | object | 请求权限数据接口返回的响应对象
-- object.status | 状态 | boolean | 是否正确拿到了权限数据
-- object.msg | 提示信息 | string | 状态为true时，不会用到msg；状态为false时，如果option.resErrorFree为false,那么将提示该信息
-- object.data | 权限数据 | array | 状态为true时，将权限数据写入到该值中返回；例如[1002,1003,1004]
+| object | 处理后的权限对象 | object | 请求权限数据接口返回的响应对象
+| - object.status | 状态 | boolean | 是否正确拿到了权限数据
+| - object.msg | 提示信息 | string | 状态为true时，不会用到msg；状态为false时，如果option.resErrorFree为false,那么将提示该信息
+| - object.data | 权限数据 | array | 状态为true时，将权限数据写入到该值中返回；例如[1002,1003,1004]
 
 返回值
 
@@ -231,8 +231,8 @@ undefined
 
 参数 | 说明 | 类型 | 默认值 | 可选值 | 描述 |
 --- | --- | --- | --- | ---- | ----
-router | 对应的router对象 | vue-router对象 | 无 | 页面中的router |
-page | 页面的代号 | string | 无 |  | 对应config中的page-key
+| router | 对应的router对象 | vue-router对象 | 无 | 页面中的router |
+| page | 页面的代号 | string | 无 |  | 对应config中的page-key
 
 返回值
 

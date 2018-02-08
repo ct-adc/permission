@@ -151,15 +151,15 @@ permission.getPermission('check-record').then(()=>{
 
 参数 | 说明 | 类型 | 默认值 | 可选值 | 描述 |
 --- | --- | --- | --- | ---- | ----
-option | 权限配置对象 | object |  | 权限配置对象指定了权限码、权限获取等方面的配置 |
-- option.noPermission | 无权限提示 | string | '对不起，您没有该页面的权限' | 没有权限时的提示文字 |
-- option.reqErrorFree | 是否屏蔽权限获取失败提示 | boolean | '对不起，您没有该页面的权限' | 如果屏蔽权限获取失败的提示，则直接提示无权限，否则，提示请求失败提示 |
-- option.config | 权限码配置列表 | object | {} |  | 和后端约定的权限码字典 具体格式见下方备注1
-- option.ajax | ajax配置 | object | {url: '', type: 'get', data(pageId){return {pageId: pageId};}} |  | ajax请求参数
--- option.ajax.url | ajax请求地址 | string | '' |  | ajax请求地址
--- option.ajax.type | ajax请求方法 | string | 'get' | 合法的ajax请求方法 | ajax请求方法
--- option.ajax.data | ajax请求数据 | function | function(pageId){return {pageId: pageId};}} | | 该方法接收pageId作为参数，得出接口需要的数据格式
-- option.resFilter | 响应内容处理器 | function | 见下方备注2 | | 该方法接收响应内容作为参数，得出一个格式固定的对象，指定响应内容是否正确；具体定义方式见下方备注3
+| option | 权限配置对象 | object |  | 权限配置对象指定了权限码、权限获取等方面的配置 |
+| - option.noPermission | 无权限提示 | string | '对不起，您没有该页面的权限' | 没有权限时的提示文字 |
+| - option.reqErrorFree | 是否屏蔽权限获取失败提示 | boolean | '对不起，您没有该页面的权限' | 如果屏蔽权限获取失败的提示，则直接提示无权限，否则，提示请求失败提示 |
+| - option.config | 权限码配置列表 | object | {} |  | 和后端约定的权限码字典 具体格式见下方备注1
+| - option.ajax | ajax配置 | object | {url: '', type: 'get', data(pageId){return {pageId: pageId};}} |  | ajax请求参数
+| -- option.ajax.url | ajax请求地址 | string | '' |  | ajax请求地址
+| -- option.ajax.type | ajax请求方法 | string | 'get' | 合法的ajax请求方法 | ajax请求方法
+| -- option.ajax.data | ajax请求数据 | function | function(pageId){return {pageId: pageId};}} | | 该方法接收pageId作为参数，得出接口需要的数据格式
+| -- option.resFilter | 响应内容处理器 | function | 见下方备注2 | | 该方法接收响应内容作为参数，得出一个格式固定的对象，指定响应内容是否正确；具体定义方式见下方备注3
 
 ##### 备注1：config（权限码）配置格式
 

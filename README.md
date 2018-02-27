@@ -25,7 +25,7 @@
 从npm安装ct-adc-permission
 
 ```
-npm install ct-adc-test --save
+npm install ct-adc-permission --save
 ```
 在代码中使用
 

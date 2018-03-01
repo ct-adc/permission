@@ -185,6 +185,7 @@ permission.getPermission('check-record').then(()=>{
 ##### 备注2：resFilter默认值
 ```
 function(res){
+    res = utility.objTransfer.lowerKey(res);
     if (res.code === 0) {
         return {
             status: true,

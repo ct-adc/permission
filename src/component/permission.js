@@ -20,6 +20,7 @@ const permission = {
             }
         },
         resFilter(res){
+            res = utility.objTransfer.lowerKey(res);
             if (res.code === 0) {
                 return {
                     status: true,

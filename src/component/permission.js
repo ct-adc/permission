@@ -65,6 +65,15 @@ const permission = {
             }
         });
     },
+    _mixNote(note){
+        Vue.mixin({
+            data(){
+                return {
+                    permissionNote: note
+                };
+            }
+        });
+    },
     _registerComponent(){
         Vue.component('no-permission', {
             template: '<div class="hv-center text-muted f20">{{note}}</div>',
@@ -81,32 +90,31 @@ const permission = {
      * @param page
      * @private
      */
-    initRouterHook(router, page){
+    initRouterHook(router){
         router.beforeEach((to, from, next) => {
             const requireAuth = to.matched.some(record => record.meta.requireAuth);
 
             if (requireAuth) {
-                this.getPermission(page).then(({permission, note}) => {
-                    const hasPermission = to.matched.every(record => {
-                        if (record.meta.requireAuth && typeof record.meta.authCode !== 'undefined') {
-                            return utility.base.getObjValByKey(permission, record.meta.authCode);
-                        } else if (record.meta.requiredAuth) {
-                            return permission.page;
-                        }
-                        return true;
-                    });
-
-                    if (!hasPermission) {
-                        next({
-                            path: '/no-permission',
-                            query: {
-                                note: note
-                            }
-                        });
-                    } else {
-                        next();
+                const permission = new Vue().permission;
+                const hasPermission = to.matched.every(record => {
+                    if (record.meta.requireAuth && typeof record.meta.authCode !== 'undefined') {
+                        return utility.base.getObjValByKey(permission, record.meta.authCode);
+                    } else if (record.meta.requiredAuth) {
+                        return permission.page;
                     }
+                    return true;
                 });
+
+                if (!hasPermission) {
+                    next({
+                        path: '/no-permission',
+                        query: {
+                            note: new Vue().permissionNote
+                        }
+                    });
+                } else {
+                    next();
+                }
             } else {
                 next();
             }
@@ -145,6 +153,7 @@ const permission = {
 
                 //进行Vue全局混合
                 this._mix(permission);
+                this._mixNote(this._option.noPermission);
                 //返回permission对象 & 无权限时的提示信息
                 return Promise.resolve({
                     permission: permission,
@@ -158,6 +167,7 @@ const permission = {
 
             //将permission对象中的权限设置为无，并进行Vue全局混合
             this._mix(permission);
+            this._mixNote(this._option.reqErrorFree ? this._option.noPermission : msg);
             //返回permission对象 & 无权限时的提示信息 注意: 此时提示的是请求错误的提示信息
             return Promise.resolve({
                 permission: permission,

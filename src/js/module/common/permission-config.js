@@ -20,7 +20,7 @@ export default{
         }
     },
     ajax: {
-        url: '/permission/get1',
+        url: '/permission/get4',
         type: 'get'
     }
 };

@@ -1,6 +1,6 @@
 {
   "name": "ct-adc-permission",
-  "version": "1.0.0-alpha.4",
+  "version": "1.0.0-alpha.5",
   "description": "A Vue.js project",
   "author": "skysunshine99 <skysunshine99@126.com>",
   "private": false,
@@ -12,11 +12,11 @@
     "lint": "eslint --ext .js,.vue src"
   },
   "dependencies": {
-    "ct-utility": "^1.0.0",
-    "vue": "~2.5.0",
-    "vue-router": "^2.2.0"
+    "ct-utility": "^1.0.0"
   },
   "devDependencies": {
+    "vue": "~2.5.0",
+    "vue-router": "^2.2.0",
     "autoprefixer": "^6.7.2",
     "babel-core": "^6.22.1",
     "babel-eslint": "^7.1.1",

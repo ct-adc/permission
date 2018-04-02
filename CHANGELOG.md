@@ -1,5 +1,13 @@
 ## 更新日志
 
+### 1.0.0-alpha.5
+
+*2018-04-02*
+
+- 修复 将vuejs从dependencied移动到devDependencies,因为有些情况下该组件会安装一个vuejs，并不会使用项目中安装的vuejs（即使项目中的vuejs版本符合该package.json中的需求）
+
+package.json中 vue: '~2.5.0',项目中的安装版本为2.5.13,而安装该组件时会在该组件文件夹中安装一个vue v2.5.16
+
 ### 1.0.0-alpha.4
 
 *2018-03-30*

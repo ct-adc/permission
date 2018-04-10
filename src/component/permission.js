@@ -9,6 +9,7 @@ const permission = {
     _option: {
         noPermission: '对不起，您没有该页面的权限',
         reqErrorFree: false,
+        reqErrorMsg: '获取权限出错，请联系管理员',
         config: {},
         ajax: {
             url: '',
@@ -76,12 +77,7 @@ const permission = {
     },
     _registerComponent(){
         Vue.component('no-permission', {
-            template: '<div class="hv-center text-muted f20">{{note}}</div>',
-            computed: {
-                note(){
-                    return this.$route.query.note;
-                }
-            }
+            template: '<div class="hv-center text-muted f20">{{permissionNote}}</div>'
         });
     },
     /**
@@ -107,10 +103,7 @@ const permission = {
 
                 if (!hasPermission) {
                     next({
-                        path: '/no-permission',
-                        query: {
-                            note: new Vue().permissionNote
-                        }
+                        path: '/no-permission'
                     });
                 } else {
                     next();
@@ -142,10 +135,6 @@ const permission = {
 
         ajaxConfig.data = this._option.ajax.data(pageId);
         return Promise.resolve($.ajax(ajaxConfig)).then(res=> {
-            // res = {
-            //     code: 0,
-            //     data: [30010]
-            // };
             res = this._option.resFilter(res);
             if (res.status) {
                 //当权限被正常返回时，解析出可读的permission对象
@@ -163,6 +152,9 @@ const permission = {
             //当权限没有被正常返回时（即没有拿到权限），返回请求的失败提示
             return Promise.reject(res.msg);
         }).catch(msg=> {
+            if (typeof msg !== 'string' || msg === ''){
+                msg = this._option.reqErrorMsg;
+            }
             const permission = this._parser(page);
 
             //将permission对象中的权限设置为无，并进行Vue全局混合

@@ -154,6 +154,7 @@ permission.getPermission('check-record').then(()=>{
 | option | 权限配置对象 | object |  | 权限配置对象指定了权限码、权限获取等方面的配置 |
 | - option.noPermission | 无权限提示 | string | '对不起，您没有该页面的权限' | 没有权限时的提示文字 |
 | - option.reqErrorFree | 是否屏蔽权限获取失败提示 | boolean | '对不起，您没有该页面的权限' | 如果屏蔽权限获取失败的提示，则直接提示无权限，否则，提示请求失败提示 |
+| - option.reqErrorMsg | 接口出错提示 | string | '获取权限出错，请联系管理员' | 当不屏蔽权限获取失败提示时，如果接口请求出错，则返回该提示 |
 | - option.config | 权限码配置列表 | object | {} |  | 和后端约定的权限码字典 具体格式见下方备注1
 | - option.ajax | ajax配置 | object | {url: '', type: 'get', data(pageId){return {pageId: pageId};}} |  | ajax请求参数
 | -- option.ajax.url | ajax请求地址 | string | '' |  | ajax请求地址

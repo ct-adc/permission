@@ -1,5 +1,13 @@
 ## 更新日志
 
+### 1.0.0-alpha.6
+
+*2018-04-10*
+
+- 修复 请求权限接口出错时，catch中需判断error是否为错误信息，不是错误信息时需使用reqErrorMsg
+
+- 优化 no-permission路由中的信息，读取mix中的permissionNote，不通过query的方式
+
 ### 1.0.0-alpha.5
 
 *2018-04-02*

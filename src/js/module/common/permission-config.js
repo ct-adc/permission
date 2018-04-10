@@ -6,6 +6,7 @@
 // 3 查看 添加
 // 4 查看 添加 编辑
 export default{
+    reqErrorFree: true,
     config: {
         'check-record': {
             pageId: 300105,

@@ -18,7 +18,8 @@ const permission = {
                 return {
                     pageId: pageId
                 };
-            }
+            },
+            cache: false
         },
         resFilter(res){
             res = utility.objTransfer.lowerKey(res);

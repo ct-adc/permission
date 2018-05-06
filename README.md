@@ -144,7 +144,7 @@ permission.get('check-record').then(()=>{
 | - option.reqErrorFree | 是否屏蔽权限获取失败提示 | boolean | '对不起，您没有该页面的权限' | 如果屏蔽权限获取失败的提示，则直接提示无权限，否则，提示请求失败提示 |
 | - option.reqErrorMsg | 接口出错提示 | string | '获取权限出错，请联系管理员' | 当不屏蔽权限获取失败提示时，如果接口请求出错，则返回该提示 |
 | - option.config | 权限码配置列表 | object | {} |  | 和后端约定的权限码字典 具体格式[见下方](#config（权限码）配置格式)
-| - option.axios | axios配置 | object | [见下方](#option.axios)|  | axios请求参数 [见下方](#option.axios)
+| - option.axios | axios配置 | object | [见下方](#optionaxios)|  | axios请求参数 [见下方](#optionaxios)
 
 ##### config（权限码）配置格式
 

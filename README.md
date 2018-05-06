@@ -168,7 +168,7 @@ permission.get('check-record').then(()=>{
 ```
 ##### option.axios
 
-1. 默认值
+默认值
 
 ```
 {

@@ -221,5 +221,5 @@ undefined
 
 ## 更新日志
 
-[更新日志](https://github.com/ct-adc/permission/blob/dev/CHANGELOG.md)
+[更新日志](https://github.com/ct-adc/permission/blob/master/CHANGELOG.md)
 

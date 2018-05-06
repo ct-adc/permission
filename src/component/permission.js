@@ -15,17 +15,6 @@ const permission = {
         axios: {
             url: '',
             method: 'get',
-            params: (data)=>{
-                return {
-                    _: +new Date(),
-                    pageId: data
-                };
-            },
-            transformRequest: [(data)=>{
-                return {
-                    pageId: data
-                };
-            }],
             transformResponse: [(response)=>{
                 const res = utility.objTransfer.lowerKey(JSON.parse(response));
 
@@ -141,8 +130,23 @@ const permission = {
     get(page){
         const pageId = this._option.config[page].pageId;
 
-        if (this._option.axios.method === 'get'){
-            this._option.axios.params = this._option.axios.params(pageId);
+        if (this._option.axios.params){
+            if (typeof this._option.axios.params === 'function'){
+                this._option.axios.params = this._option.axios.params(pageId);
+            } else {
+                this._option.axios.params = this._option.axios.params;
+            }
+            this._option.axios.params._ = +new Date();
+        }
+        if (['put', 'post', 'patch'].indexOf(this._option.axios.method.toLowerCase()) > -1){
+            this._option.axios.data = {
+                pageId: pageId
+            };
+        } else if (typeof this._option.axios.params === 'undefined'){
+            this._option.axios.params = {
+                pageId: pageId,
+                _: +new Date()
+            };
         }
         return axios.request(this._option.axios).then(response=>{
             const res = response.data;

@@ -174,17 +174,6 @@ permission.get('check-record').then(()=>{
 {
     url: '',
     method: 'get',
-    params: (data)=>{
-        return {
-            _: +new Date(),
-            pageId: data
-        };
-    },
-    transformRequest: [(data)=>{
-        return {
-            pageId: data
-        };
-    }],
     transformResponse: [(response)=>{
         const res = utility.objTransfer.lowerKey(JSON.parse(response));
 
@@ -203,6 +192,17 @@ permission.get('check-record').then(()=>{
     }]
 }
 ```
+axios配置和axios官方配置除params为函数外，其他均一致。
+因为组件中对于请求参数或请求数据是注入的，默认情况下:
+1. 如果请求为put/post/patch请求，data默认为{pageId: pageId};
+当然你可以通过responseRequest做请求主体的数据转变；
+
+2. 如果请求为除put/post/patch外的请求，params默认为{pageId: pageId};
+此时你可以通过设置axios.params为一个方法(参数为pageId)，返回一个处理过后的params；
+或者设置axios.params为一个对象，那么请求时将直接使用这个对象作为axios的params对象；
+
+注意：请不要设置多余的请求数据处理配置，如当请求为'post'时，除非你真的需要设置params，否则请不要设置。
+因为post请求中params是默认不忽略的，也就是说，axios没有禁止post请求不能带query。
 
 ### route
 

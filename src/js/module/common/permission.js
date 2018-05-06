@@ -5,7 +5,9 @@
 // 2 查看
 // 3 查看 添加
 // 4 查看 添加 编辑
-export default{
+import permission from 'permission';
+
+export default permission.config({
     reqErrorFree: true,
     config: {
         'check-record': {
@@ -20,8 +22,7 @@ export default{
             }
         }
     },
-    ajax: {
-        url: '/permission/get4',
-        type: 'get'
+    axios: {
+        url: '/permission/get3'
     }
-};
+});

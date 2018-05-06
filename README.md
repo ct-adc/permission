@@ -29,11 +29,14 @@ npm install ct-adc-permission --save
 ```
 在代码中使用
 
-1. 首先，配置permission的相关配置信息，你可以写在一个单独的模块中，便于代码维护，如：
-src/common/permission-config.js
+1. 首先，配置permission的相关配置信息，并初始化一个全局通用的permission,建议将以下代码写在一个单独的模块中，便于通用和维护，如：
+src/common/permission.js
 
 ```
-export default{
+import permission from 'permission';
+
+export default permission.config({
+    reqErrorFree: true,
     config: {
         'check-record': {
             pageId: 300105,
@@ -47,50 +50,38 @@ export default{
             }
         }
     },
-    ajax: {
-        url: '/permission/get3',
-        type: 'get'
+    axios: {
+        url: '/permission/get3'
     }
-};
+});
 ```
-2. 在页面的主入口中引入ct-adc-permission:
+2. 在页面的主入口中引入common/permission.js:
 
 ```
-import permission from 'ct-adc-permission';
+import permission from 'common/permission';
 ```
-3. 如果要使用路由级别的控制，那么需要在引入ct-adc-permission后引入router:
-
-注意：router的引入必须在permission后
+3. 如果要使用路由级别的控制，那么使用permission.route方法, 将需要控制的路由对象传给permission，以便permission为此路由对象加入钩子:
+ （如果你所开发的页面没有使用路由，那么跳过该步骤）
 
 ```
 import router from './router';
+permission.route(router);
 ```
+如果使用路由权限控制的话，仅调用该方法是不够的，需要在初始化router对象时添加权限配置, 见[路由对象配置](#router对象配置)
 
-4. 初始化permission
-
-```
-permission.init(permissionConfig);
-```
-
-初始化的目的是告诉permission，关于页面的控制码是怎么样的，至于permissionConfig中的具体样式，在下面会做详细介绍
-
-5. 如果要使用路由级别的控制，那么需要初始化路由钩子用于权限控制
+4. 在页面初始化时，保证permission先获取权限数据
 
 ```
-permission.initRouterHook(router, 'check-record');
-```
-
-6. 在页面初始化时，保证permission先获取权限数据
-
-```
-permission.getPermission('check-record').then(()=>{
+permission.get('check-record').then(()=>{
     new Vue({
         el: '#app',
         router
     });
 });
 ```
-另外，如果要配置路由级权限，需要使用权限控制的路由上需要配置requireAuth和authCode，如：
+### router对象配置
+
+如上所说，如果要配置路由级权限，需要使用权限控制的路由上需要配置requireAuth和authCode，如：
 ```
 routes: [{
         path: '/',
@@ -98,36 +89,33 @@ routes: [{
     }, {
         path: '/app',
         component: App,
-        meta: {requireAuth: true, authCode: 'page'}
+        meta: {requireAuth: true, authCode: 'page'} //指定该路由需要权限控制，且权限对应的是permission.page
     }, {
         path: '/edit',
         component: Update,
-        meta: {requireAuth: true, authCode: 'operate.edit'},
+        meta: {requireAuth: true, authCode: 'operate.edit'}, //指定该路由需要权限控制，且权限对应的是permission.operate.edit
         children: [{
             path: 'view',
             component: UpdateView,
-            meta: {requireAuth: true, authCode: 'operate.editView'}
+            meta: {requireAuth: true, authCode: 'operate.editView'} //指定该路由需要权限控制，且权限对应的是permission.operate.editView
         }]
     }, {
         path: '/add',
         component: Update,
-        meta: {requireAuth: true, authCode: 'operate.add'}
+        meta: {requireAuth: true, authCode: 'operate.add'} //指定该路由需要权限控制，且权限对应的是permission.operate.add
     }, {
         path: '/no-permission',
-        component: Vue.component('no-permission')
+        component: Vue.component('no-permission') //指定/no-permission为无权限时的跳转页面，其中Vue.component('no-permission')已由该组件注册到全局
     }]
-
 ```
 
 最后，你的权限控制已经完成，配置像下面这样：
 ```
-import permission from 'ct-adc-permission';
-import permissionConfig from 'common/permission-config';
+import permission from 'common/permission';
 import Vue from 'vue';
 import router from './router';
-permission.init(permissionConfig);
-permission.initRouterHook(router, 'check-record');
-permission.getPermission('check-record').then(()=>{
+permission.route(permissionConfig);
+permission.get('check-record').then(()=>{
     new Vue({
         el: '#app',
         router
@@ -155,14 +143,10 @@ permission.getPermission('check-record').then(()=>{
 | - option.noPermission | 无权限提示 | string | '对不起，您没有该页面的权限' | 没有权限时的提示文字 |
 | - option.reqErrorFree | 是否屏蔽权限获取失败提示 | boolean | '对不起，您没有该页面的权限' | 如果屏蔽权限获取失败的提示，则直接提示无权限，否则，提示请求失败提示 |
 | - option.reqErrorMsg | 接口出错提示 | string | '获取权限出错，请联系管理员' | 当不屏蔽权限获取失败提示时，如果接口请求出错，则返回该提示 |
-| - option.config | 权限码配置列表 | object | {} |  | 和后端约定的权限码字典 具体格式见下方备注1
-| - option.ajax | ajax配置 | object | {url: '', type: 'get', data(pageId){return {pageId: pageId};}} |  | ajax请求参数
-| -- option.ajax.url | ajax请求地址 | string | '' |  | ajax请求地址
-| -- option.ajax.type | ajax请求方法 | string | 'get' | 合法的ajax请求方法 | ajax请求方法
-| -- option.ajax.data | ajax请求数据 | function | function(pageId){return {pageId: pageId};}} | | 该方法接收pageId作为参数，得出接口需要的数据格式
-| -- option.resFilter | 响应内容处理器 | function | 见下方备注2 | | 该方法接收响应内容作为参数，得出一个格式固定的对象，指定响应内容是否正确；具体定义方式见下方备注3
+| - option.config | 权限码配置列表 | object | {} |  | 和后端约定的权限码字典 具体格式[见下方](#config（权限码）配置格式)
+| - option.axios | axios配置 | object | [见下方](#option.axios)|  | axios请求参数 [见下方](#option.axios)
 
-##### 备注1：config（权限码）配置格式
+##### config（权限码）配置格式
 
 1. config中的每一项为一个页面的权限码配置，如config['check-record']; 其中check-record称为page-key；
 2. 针对一个页面的配置，pageId为该页面的权限获取时用到的标识该页面的Id；如下面的配置中，该值为300105;
@@ -182,50 +166,45 @@ permission.getPermission('check-record').then(()=>{
     }
 }
 ```
+##### option.axios
 
-##### 备注2：resFilter默认值
+1. 默认值
+
 ```
-function(res){
-    res = utility.objTransfer.lowerKey(res);
-    if (res.code === 0) {
+{
+    url: '',
+    method: 'get',
+    params: (data)=>{
         return {
-            status: true,
-            msg: '',
-            data: res.data
+            _: +new Date(),
+            pageId: data
         };
-    }
-    return {
-        status: false,
-        msg: '获取权限出错，请联系管理员',
-        data: []
-    };
+    },
+    transformRequest: [(data)=>{
+        return {
+            pageId: data
+        };
+    }],
+    transformResponse: [(response)=>{
+        const res = utility.objTransfer.lowerKey(JSON.parse(response));
+
+        if (res.code === 0) {
+            return {
+                status: true, //是否正确拿到了权限数据
+                msg: '', //状态为true时，不会用到msg；
+                data: res.data //状态为true时，将权限数据写入到该值中返回；例如[1002,1003,1004]
+            };
+        }
+        return {
+            status: false,
+            msg: '获取权限出错，请联系管理员', // 状态为false时，如果option.resErrorFree为false,那么将提示该信息
+            data: []
+        };
+    }]
 }
 ```
 
-##### 备注3：resFilter方法定义
-
-参数 | 说明 | 类型 | 默认值 | 可选值 | 描述 |
---- | --- | --- | --- | ---- | ----
-res | 响应对象 | object |  |  | 请求权限数据接口返回的响应对象
-
-返回值
-
-object
-
-该对象必须包含status/msg/data三个key；
-
-返回值 | 说明 | 类型 | 描述 |
---- | --- | --- | --- 
-| object | 处理后的权限对象 | object | 请求权限数据接口返回的响应对象
-| - object.status | 状态 | boolean | 是否正确拿到了权限数据
-| - object.msg | 提示信息 | string | 状态为true时，不会用到msg；状态为false时，如果option.resErrorFree为false,那么将提示该信息
-| - object.data | 权限数据 | array | 状态为true时，将权限数据写入到该值中返回；例如[1002,1003,1004]
-
-返回值
-
-undefined
-
-### initRouterHook
+### route
 
 初始化路由配置；该方法初始化路由钩子
 
@@ -234,7 +213,6 @@ undefined
 参数 | 说明 | 类型 | 默认值 | 可选值 | 描述 |
 --- | --- | --- | --- | ---- | ----
 | router | 对应的router对象 | vue-router对象 | 无 | 页面中的router |
-| page | 页面的代号 | string | 无 |  | 对应config中的page-key
 
 返回值
 
@@ -244,8 +222,4 @@ undefined
 ## 更新日志
 
 [更新日志](https://github.com/ct-adc/permission/blob/dev/CHANGELOG.md)
-
-## 外部资源依赖列表
-
-- jquery（只要支持ajax方法即可）
 

@@ -4,6 +4,7 @@
  */
 import utility from 'ct-utility';
 import Vue from 'vue';
+import axios from 'axios';
 
 const permission = {
     _option: {
@@ -11,30 +12,36 @@ const permission = {
         reqErrorFree: false,
         reqErrorMsg: '获取权限出错，请联系管理员',
         config: {},
-        ajax: {
+        axios: {
             url: '',
-            type: 'get',
-            data(pageId){
+            method: 'get',
+            params: (data)=>{
                 return {
-                    pageId: pageId
+                    _: +new Date(),
+                    pageId: data
                 };
             },
-            cache: false
-        },
-        resFilter(res){
-            res = utility.objTransfer.lowerKey(res);
-            if (res.code === 0) {
+            transformRequest: [(data)=>{
                 return {
-                    status: true,
-                    msg: '',
-                    data: res.data
+                    pageId: data
                 };
-            }
-            return {
-                status: false,
-                msg: '获取权限出错，请联系管理员',
-                data: []
-            };
+            }],
+            transformResponse: [(response)=>{
+                const res = utility.objTransfer.lowerKey(JSON.parse(response));
+
+                if (res.code === 0) {
+                    return {
+                        status: true,
+                        msg: '',
+                        data: res.data
+                    };
+                }
+                return {
+                    status: false,
+                    msg: '获取权限出错，请联系管理员',
+                    data: []
+                };
+            }]
         }
     },
     /**
@@ -87,7 +94,7 @@ const permission = {
      * @param page
      * @private
      */
-    initRouterHook(router){
+    route(router){
         router.beforeEach((to, from, next) => {
             const requireAuth = to.matched.some(record => record.meta.requireAuth);
 
@@ -122,21 +129,24 @@ const permission = {
      * @param {object} option.ajax ajax配置 同Jquery.ajax配置，其中data为参数是pageId的方法
      * @param {object} option.resFilter 对请求结果的处理函数 参数为响应内容 结果为{status: Boolean, msg: String, data: Object}
      */
-    init(option){
+    config(option){
         this._option = utility.base.extend(true, {}, this._option, option);
+        return this;
     },
     /**
      * 请求用户在某个页面的权限
      * @param {string} page page-key 对应option.config中的page-key
      * @returns {Promise.<TResult>} 返回请求permission的promise对象
      */
-    getPermission(page){
+    get(page){
         const pageId = this._option.config[page].pageId;
-        const ajaxConfig = JSON.parse(JSON.stringify(this._option.ajax));
 
-        ajaxConfig.data = this._option.ajax.data(pageId);
-        return Promise.resolve($.ajax(ajaxConfig)).then(res=> {
-            res = this._option.resFilter(res);
+        if (this._option.axios.method === 'get'){
+            this._option.axios.params = this._option.axios.params(pageId);
+        }
+        return axios.request(this._option.axios).then(response=>{
+            const res = response.data;
+
             if (res.status) {
                 //当权限被正常返回时，解析出可读的permission对象
                 const permission = this._parser(page, res.data);

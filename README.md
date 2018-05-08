@@ -33,7 +33,7 @@ npm install ct-adc-permission --save
 src/common/permission.js
 
 ```
-import permission from 'permission';
+import permission from 'ct-adc-permission';
 
 export default permission.config({
     reqErrorFree: true,
@@ -111,10 +111,10 @@ routes: [{
 
 最后，你的权限控制已经完成，配置像下面这样：
 ```
-import permission from 'common/permission';
+import permission from 'common/permission'; // ！此处引用项目自身的common/permission
 import Vue from 'vue';
 import router from './router';
-permission.route(permissionConfig);
+permission.route(router);
 permission.get('check-record').then(()=>{
     new Vue({
         el: '#app',

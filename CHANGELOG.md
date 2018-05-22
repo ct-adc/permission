@@ -1,5 +1,13 @@
 ## 更新日志
 
+### 1.0.0-beta.2
+
+*2018-05-22*
+
+- 修复 判断router钩子中的path为/no-permission时直接放行
+
+- 修复 将no-permission组件中的template换成render函数
+
 ### 1.0.0-beta.1
 
 *2018-05-06*

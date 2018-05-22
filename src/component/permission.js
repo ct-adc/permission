@@ -74,7 +74,14 @@ const permission = {
     },
     _registerComponent(){
         Vue.component('no-permission', {
-            template: '<div class="hv-center text-muted f20">{{permissionNote}}</div>'
+            render(h){
+                return h('div', {
+                    class: ['hv-center', 'text-muted', 'f20'],
+                    domProps: {
+                        innerHTML: this.permissionNote
+                    }
+                });
+            }
         });
     },
     /**
@@ -85,28 +92,32 @@ const permission = {
      */
     route(router){
         router.beforeEach((to, from, next) => {
-            const requireAuth = to.matched.some(record => record.meta.requireAuth);
+            if (to.fullPath === '/no-permission'){
+                next();
+            } else {
+                const requireAuth = to.matched.some(record => record.meta.requireAuth);
 
-            if (requireAuth) {
-                const permission = new Vue().permission;
-                const hasPermission = to.matched.every(record => {
-                    if (record.meta.requireAuth && typeof record.meta.authCode !== 'undefined') {
-                        return utility.base.getObjValByKey(permission, record.meta.authCode);
-                    } else if (record.meta.requiredAuth) {
-                        return permission.page;
-                    }
-                    return true;
-                });
-
-                if (!hasPermission) {
-                    next({
-                        path: '/no-permission'
+                if (requireAuth) {
+                    const permission = new Vue().permission;
+                    const hasPermission = to.matched.every(record => {
+                        if (record.meta.requireAuth && typeof record.meta.authCode !== 'undefined') {
+                            return utility.base.getObjValByKey(permission, record.meta.authCode);
+                        } else if (record.meta.requiredAuth) {
+                            return permission.page;
+                        }
+                        return true;
                     });
+    
+                    if (!hasPermission) {
+                        next({
+                            path: '/no-permission'
+                        });
+                    } else {
+                        next();
+                    }
                 } else {
                     next();
                 }
-            } else {
-                next();
             }
         });
     },

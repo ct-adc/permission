@@ -23,7 +23,7 @@ export default permission.config({
         }
     },
     axios: {
-        url: '/permission/get2',
+        url: '/permission/get4',
         method: 'get',
         params(pageId){
             return {

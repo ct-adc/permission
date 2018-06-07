@@ -44,7 +44,7 @@ const permission = {
         const pageConfig = this._option.config[page].code;
         const pagePermissionStr = JSON.stringify(pageConfig).replace(/pageId:\d+/g, '').replace(/\d{1,20}/g, (match)=> {
             match = match * 1;
-            return (permisson.indexOf(match) > -1).toString();
+            return (permisson.indexOf(match) > -1 || permisson.indexOf(match + '') > -1).toString();
         });
 
         return JSON.parse(pagePermissionStr);

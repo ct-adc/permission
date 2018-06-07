@@ -166,6 +166,9 @@ permission.get('check-record').then(()=>{
     }
 }
 ```
+
+**备注:** 上述权限码兼容数字和字符串
+
 ##### option.axios
 
 默认值

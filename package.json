@@ -1,6 +1,6 @@
 {
   "name": "ct-adc-permission",
-  "version": "1.0.0-beta.3",
+  "version": "1.0.0",
   "description": "A Vue.js project",
   "author": "skysunshine99 <skysunshine99@126.com>",
   "private": false,

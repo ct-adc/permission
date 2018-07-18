@@ -81,7 +81,7 @@ permission.get('check-record').then(()=>{
 ```
 ### router对象配置
 
-如上所说，如果要配置路由级权限，需要使用权限控制的路由上需要配置authCode，如果没有authCode，则表示该路由没有直接的权限控制如：
+如上所说，如果要配置路由级权限，需要使用权限控制的路由上需要配置authCode，如果没有authCode，则表示该路由没有直接的权限控制。如：
 ```
 routes: [{
         path: '/',

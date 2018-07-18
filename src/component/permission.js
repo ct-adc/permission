@@ -5,6 +5,7 @@
 import utility from 'ct-utility';
 import Vue from 'vue';
 import axios from 'axios';
+import NoPermission from './no-permission';
 
 const permission = {
     _option: {
@@ -73,16 +74,7 @@ const permission = {
         });
     },
     _registerComponent(){
-        Vue.component('no-permission', {
-            render(h){
-                return h('div', {
-                    class: ['hv-center', 'text-muted', 'f20'],
-                    domProps: {
-                        innerHTML: this.permissionNote
-                    }
-                });
-            }
-        });
+        Vue.component('no-permission', NoPermission);
     },
     /**
      *
@@ -91,19 +83,25 @@ const permission = {
      * @private
      */
     route(router){
+        router.addRoutes([{
+            path: '/no-permission',
+            component: Vue.component('no-permission')
+        }]);
         router.beforeEach((to, from, next) => {
             if (to.fullPath === '/no-permission'){
                 next();
             } else {
-                const requireAuth = to.matched.some(record => record.meta.requireAuth);
+                const requireAuth = to.matched.some(record => {
+                    return typeof record.meta.authCode !== 'undefined';
+                });
 
                 if (requireAuth) {
                     const permission = new Vue().permission;
                     const hasPermission = to.matched.every(record => {
-                        if (record.meta.requireAuth && typeof record.meta.authCode !== 'undefined') {
-                            return utility.base.getObjValByKey(permission, record.meta.authCode);
-                        } else if (record.meta.requiredAuth) {
-                            return permission.page;
+                        const authCode = record.meta.authCode;
+
+                        if (typeof authCode !== 'undefined') {
+                            return utility.base.getObjValByKey(permission, authCode);
                         }
                         return true;
                     });

@@ -21,5 +21,9 @@ module.exports = {
     '/permission/get4': {
         Code: 0,
         Data: ['30010', '102343', '102344'] // 查看 添加 编辑
+    },
+    '/permission/get5': {
+        Code: 0,
+        Data: [30010, 102343, 102345] // 查看 添加 编辑 查看of编辑
     }
 };

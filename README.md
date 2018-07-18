@@ -61,7 +61,7 @@ export default permission.config({
 import permission from 'common/permission';
 ```
 3. 如果要使用路由级别的控制，那么使用permission.route方法, 将需要控制的路由对象传给permission，以便permission为此路由对象加入钩子:
- （如果你所开发的页面没有使用路由，那么跳过该步骤）
+ （如果你所开发的页面没有使用路由，那么跳过该步骤)
 
 ```
 import router from './router';
@@ -81,7 +81,7 @@ permission.get('check-record').then(()=>{
 ```
 ### router对象配置
 
-如上所说，如果要配置路由级权限，需要使用权限控制的路由上需要配置requireAuth和authCode，如：
+如上所说，如果要配置路由级权限，需要使用权限控制的路由上需要配置authCode，如果没有authCode，则表示该路由没有直接的权限控制。如：
 ```
 routes: [{
         path: '/',
@@ -89,25 +89,23 @@ routes: [{
     }, {
         path: '/app',
         component: App,
-        meta: {requireAuth: true, authCode: 'page'} //指定该路由需要权限控制，且权限对应的是permission.page
+        meta: {authCode: 'page'} //指定该路由需要权限控制，且权限对应的是permission.page
     }, {
         path: '/edit',
         component: Update,
-        meta: {requireAuth: true, authCode: 'operate.edit'}, //指定该路由需要权限控制，且权限对应的是permission.operate.edit
+        meta: {authCode: 'operate.edit'}, //指定该路由需要权限控制，且权限对应的是permission.operate.edit
         children: [{
             path: 'view',
             component: UpdateView,
-            meta: {requireAuth: true, authCode: 'operate.editView'} //指定该路由需要权限控制，且权限对应的是permission.operate.editView
+            meta: {authCode: 'operate.editView'} //指定该路由需要权限控制，且权限对应的是permission.operate.editView
         }]
     }, {
         path: '/add',
         component: Update,
-        meta: {requireAuth: true, authCode: 'operate.add'} //指定该路由需要权限控制，且权限对应的是permission.operate.add
-    }, {
-        path: '/no-permission',
-        component: Vue.component('no-permission') //指定/no-permission为无权限时的跳转页面，其中Vue.component('no-permission')已由该组件注册到全局
+        meta: {authCode: 'operate.add'} //指定该路由需要权限控制，且权限对应的是permission.operate.add
     }]
 ```
+注意： '/no-permission'为组件占用的路由，在业务中应避免使用该路由。
 
 最后，你的权限控制已经完成，配置像下面这样：
 ```

@@ -14,7 +14,6 @@
                     <td><router-link class="btn btn-sm btn-primary" to="/edit" v-if="permission.operate.edit">编辑</router-link></td>
                 </tr>
             </tbody>
-
         </table>
     </div>
 </template>

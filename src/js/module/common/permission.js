@@ -8,7 +8,7 @@
 import permission from 'permission';
 
 export default permission.config({
-    reqErrorFree: true,
+    reqErrorFree: false,
     config: {
         'check-record': {
             pageId: 300105,
@@ -23,7 +23,7 @@ export default permission.config({
         }
     },
     axios: {
-        url: '/permission/get4',
+        url: '/permission/get1',
         method: 'get',
         params(pageId){
             return {

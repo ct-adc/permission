@@ -14,23 +14,20 @@ const router = new VueRouter({
     }, {
         path: '/app',
         component: App,
-        meta: {requireAuth: true, authCode: 'page'}
+        meta: {authCode: 'page'}
     }, {
         path: '/edit',
         component: Update,
-        meta: {requireAuth: true, authCode: 'operate.edit'},
+        meta: {authCode: 'operate.edit'},
         children: [{
             path: 'view',
             component: UpdateView,
-            meta: {requireAuth: true, authCode: 'operate.editView'}
+            meta: {authCode: 'operate.editView'}
         }]
     }, {
         path: '/add',
         component: Update,
-        meta: {requireAuth: true, authCode: 'operate.add'}
-    }, {
-        path: '/no-permission',
-        component: Vue.component('no-permission')
+        meta: {authCode: 'operate.add'}
     }]
 });
 
